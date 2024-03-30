@@ -11,10 +11,7 @@ sealed class Song {
         val imageUrl: String,
         var isLocallyStored: Boolean = false
     ) : Song() {
-
-        val year: String = releaseDate.split("-").first()
     }
-
     object EmptySong : Song()
 }
 
