@@ -3,6 +3,7 @@ package ayds.songinfo.home.view
 import ayds.songinfo.home.model.entities.Song.EmptySong
 import ayds.songinfo.home.model.entities.Song
 import ayds.songinfo.home.model.entities.Song.SpotifySong
+import ayds.songinfo.utils.view.DatePrecisionFormatterImpl
 
 interface SongDescriptionHelper {
     fun getSongDescriptionText(song: Song = EmptySong): String
@@ -11,14 +12,16 @@ interface SongDescriptionHelper {
 internal class SongDescriptionHelperImpl : SongDescriptionHelper {
     override fun getSongDescriptionText(song: Song): String {
         return when (song) {
-            is SpotifySong ->
+            is SpotifySong -> {
+                val formatter = DatePrecisionFormatterImpl()
                 "${
                     "Song: ${song.songName} " +
                             if (song.isLocallyStored) "[*]" else ""
                 }\n" +
                         "Artist: ${song.artistName}\n" +
                         "Album: ${song.albumName}\n" +
-                        "Release date: ${song.releaseDate}"
+                        "Release date: ${formatter.setDatePrecision(song)}"
+            }
             else -> "Song not found"
         }
     }

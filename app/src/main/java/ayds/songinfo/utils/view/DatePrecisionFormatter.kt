@@ -13,9 +13,9 @@ internal class DatePrecisionFormatterImpl: DatePrecisionFormatter{
 
     override fun setDatePrecision(song: Song.SpotifySong): String {
         return when (song.releaseDatePrecision){
-            "day" -> displayDayPrecision(song.releaseDatePrecision)
-            "month" -> displayMonthPrecision(song.releaseDatePrecision)
-            "year" -> displayYearPrecision(song.releaseDatePrecision)
+            "day" -> displayDayPrecision(song.releaseDate)
+            "month" -> displayMonthPrecision(song.releaseDate)
+            "year" -> displayYearPrecision(song.releaseDate)
             else -> "Precisión desconocida"
         }
     }
