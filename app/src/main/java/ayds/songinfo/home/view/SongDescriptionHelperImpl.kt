@@ -3,7 +3,6 @@ package ayds.songinfo.home.view
 import ayds.songinfo.home.model.entities.Song.EmptySong
 import ayds.songinfo.home.model.entities.Song
 import ayds.songinfo.home.model.entities.Song.SpotifySong
-import ayds.songinfo.utils.view.DatePrecisionFormatterImpl
 
 interface SongDescriptionHelper {
     fun getSongDescriptionText(song: Song = EmptySong): String
