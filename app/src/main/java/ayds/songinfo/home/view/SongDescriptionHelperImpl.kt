@@ -8,20 +8,23 @@ interface SongDescriptionHelper {
     fun getSongDescriptionText(song: Song = EmptySong): String
 }
 
-internal class SongDescriptionHelperImpl : SongDescriptionHelper {
+internal class SongDescriptionHelperImpl(private val releaseDateResolverFactory: DatePrecisionFormatterFactory) :
+    SongDescriptionHelper {
     override fun getSongDescriptionText(song: Song): String {
         return when (song) {
-            is SpotifySong -> {
-                val formatter = DatePrecisionFormatterImpl()
+            is SpotifySong ->
                 "${
                     "Song: ${song.songName} " +
                             if (song.isLocallyStored) "[*]" else ""
                 }\n" +
                         "Artist: ${song.artistName}\n" +
                         "Album: ${song.albumName}\n" +
-                        "Release date: ${formatter.setDatePrecision(song)}"
-            }
+                        "Release date: ${
+                            releaseDateResolverFactory.getDatePrecisionFormatter(song).getReleaseDate()
+                        }"
+
             else -> "Song not found"
         }
     }
+
 }
