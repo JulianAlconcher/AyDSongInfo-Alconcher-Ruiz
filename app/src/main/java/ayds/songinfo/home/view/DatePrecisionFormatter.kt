@@ -64,7 +64,8 @@ import ayds.songinfo.home.model.entities.Song
 
     internal class DatePrecisionYearFormatter(override val song:Song.SpotifySong): DatePrecisionFormatter {
         override fun getReleaseDate(): String {
-            return "$song.releaseDate  ${isLeapYear(song.releaseDate.toInt())}"
+            val releaseDate = song.releaseDate
+            return "$releaseDate ${isLeapYear(song.releaseDate.toInt())}"
         }
 
         private fun isLeapYear(year: Int): String {

@@ -31,176 +31,176 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class OtherInfoWindow extends Activity {
 
-  public final static String ARTIST_NAME_EXTRA = "artistName";
+    public final static String ARTIST_NAME_EXTRA = "artistName";
 
-  private TextView textPane1;
-  //private JPanel imagePanel;
- // private JLabel posterImageLabel;
+    private TextView textPane1;
+    //private JPanel imagePanel;
+    // private JLabel posterImageLabel;
 
-  @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.activity_other_info);
+        setContentView(R.layout.activity_other_info);
 
-    textPane1 = findViewById(R.id.textPane1);
+        textPane1 = findViewById(R.id.textPane1);
 
 
-    open(getIntent().getStringExtra("artistName"));
-  }
+        open(getIntent().getStringExtra("artistName"));
+    }
 
-  public void getARtistInfo(String artistName) {
+    public void getARtistInfo(String artistName) {
 
-    // create
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://ws.audioscrobbler.com/2.0/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build();
+        // create
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://ws.audioscrobbler.com/2.0/")
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
 
-    LastFMAPI lastFMAPI = retrofit.create(LastFMAPI.class);
+        LastFMAPI lastFMAPI = retrofit.create(LastFMAPI.class);
 
-    Log.e("TAG","artistName " + artistName);
+        Log.e("TAG","artistName " + artistName);
 
         new Thread(new Runnable() {
-          @Override
-          public void run() {
+            @Override
+            public void run() {
 
-            ArticleEntity article = dataBase.ArticleDao().getArticleByArtistName(artistName);
-
-
-            String text = "";
+                ArticleEntity article = dataBase.ArticleDao().getArticleByArtistName(artistName);
 
 
-            if (article != null) { // exists in db
-
-              text = "[*]" + article.getBiography();
-
-              final String urlString = article.getArticleUrl();
-              findViewById(R.id.openUrlButton1).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                  Intent intent = new Intent(Intent.ACTION_VIEW);
-                  intent.setData(Uri.parse(urlString));
-                  startActivity(intent);
-                }
-              });
-
-            } else { // get from service
-              Response<String> callResponse;
-              try {
-                callResponse = lastFMAPI.getArtistInfo(artistName).execute();
-
-                Log.e("TAG","JSON " + callResponse.body());
-
-                Gson gson = new Gson();
-                JsonObject jobj = gson.fromJson(callResponse.body(), JsonObject.class);
-                JsonObject artist = jobj.get("artist").getAsJsonObject();
-                JsonObject bio = artist.get("bio").getAsJsonObject();
-                JsonElement extract = bio.get("content");
-                JsonElement url = artist.get("url");
+                String text = "";
 
 
-                if (extract == null) {
-                  text = "No Results";
-                } else {
-                  text = extract.getAsString().replace("\\n", "\n");
+                if (article != null) { // exists in db
 
-                  text = textToHtml(text, artistName);
+                    text = "[*]" + article.getBiography();
+
+                    final String urlString = article.getArticleUrl();
+                    findViewById(R.id.openUrlButton1).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(urlString));
+                            startActivity(intent);
+                        }
+                    });
+
+                } else { // get from service
+                    Response<String> callResponse;
+                    try {
+                        callResponse = lastFMAPI.getArtistInfo(artistName).execute();
+
+                        Log.e("TAG","JSON " + callResponse.body());
+
+                        Gson gson = new Gson();
+                        JsonObject jobj = gson.fromJson(callResponse.body(), JsonObject.class);
+                        JsonObject artist = jobj.get("artist").getAsJsonObject();
+                        JsonObject bio = artist.get("bio").getAsJsonObject();
+                        JsonElement extract = bio.get("content");
+                        JsonElement url = artist.get("url");
 
 
-                  // save to DB  <o/
-                  final String text2 = text;
-                  new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                      dataBase.ArticleDao().insertArticle(new ArticleEntity(artistName, text2, url.getAsString()));
+                        if (extract == null) {
+                            text = "No Results";
+                        } else {
+                            text = extract.getAsString().replace("\\n", "\n");
+
+                            text = textToHtml(text, artistName);
+
+
+                            // save to DB  <o/
+                            final String text2 = text;
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dataBase.ArticleDao().insertArticle(new ArticleEntity(artistName, text2, url.getAsString()));
+                                }
+                            }).start();
+
+
+
+                        }
+
+
+                        final String urlString = url.getAsString();
+                        findViewById(R.id.openUrlButton1).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse(urlString));
+                                startActivity(intent);
+                            }
+                        });
+
+                    } catch (IOException e1) {
+                        Log.e("TAG", "Error " + e1);
+                        e1.printStackTrace();
                     }
-                  }).start();
-
-
-
                 }
 
 
-                final String urlString = url.getAsString();
-                findViewById(R.id.openUrlButton1).setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(urlString));
-                    startActivity(intent);
-                  }
+                String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png";
+
+                Log.e("TAG","Get Image from " + imageUrl);
+
+
+
+                final String finalText = text;
+
+                runOnUiThread( () -> {
+                    Picasso.get().load(imageUrl).into((ImageView) findViewById(R.id.imageView1));
+
+
+                    textPane1.setText(Html.fromHtml( finalText));
+
+
                 });
 
-              } catch (IOException e1) {
-                Log.e("TAG", "Error " + e1);
-                e1.printStackTrace();
-              }
+
+
             }
-
-
-            String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png";
-
-            Log.e("TAG","Get Image from " + imageUrl);
-
-
-
-            final String finalText = text;
-
-            runOnUiThread( () -> {
-              Picasso.get().load(imageUrl).into((ImageView) findViewById(R.id.imageView1));
-
-
-              textPane1.setText(Html.fromHtml( finalText));
-
-
-            });
-
-
-
-          }
         }).start();
 
-  }
+    }
 
-  private ArticleDatabase dataBase = null;
+    private ArticleDatabase dataBase = null;
 
-  private void open(String artist) {
-
-
-    dataBase =    Room.databaseBuilder(this, ArticleDatabase.class, "database-name-thename").build();
-
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        dataBase.ArticleDao().insertArticle(new ArticleEntity( "test", "sarasa", "")  );
-        Log.e("TAG", ""+ dataBase.ArticleDao().getArticleByArtistName("test"));
-        Log.e("TAG", ""+ dataBase.ArticleDao().getArticleByArtistName("nada"));
-
-      }
-    }).start();
+    private void open(String artist) {
 
 
-    getARtistInfo(artist);
-  }
+        dataBase =    Room.databaseBuilder(this, ArticleDatabase.class, "database-name-thename").build();
 
-  public static String textToHtml(String text, String term) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dataBase.ArticleDao().insertArticle(new ArticleEntity( "test", "sarasa", "")  );
+                Log.e("TAG", ""+ dataBase.ArticleDao().getArticleByArtistName("test"));
+                Log.e("TAG", ""+ dataBase.ArticleDao().getArticleByArtistName("nada"));
 
-    StringBuilder builder = new StringBuilder();
+            }
+        }).start();
 
-    builder.append("<html><div width=400>");
-    builder.append("<font face=\"arial\">");
 
-    String textWithBold = text
-            .replace("'", " ")
-            .replace("\n", "<br>")
-            .replaceAll("(?i)" + term, "<b>" + term.toUpperCase() + "</b>");
+        getARtistInfo(artist);
+    }
 
-    builder.append(textWithBold);
+    public static String textToHtml(String text, String term) {
 
-    builder.append("</font></div></html>");
+        StringBuilder builder = new StringBuilder();
 
-    return builder.toString();
-  }
+        builder.append("<html><div width=400>");
+        builder.append("<font face=\"arial\">");
+
+        String textWithBold = text
+                .replace("'", " ")
+                .replace("\n", "<br>")
+                .replaceAll("(?i)" + term, "<b>" + term.toUpperCase() + "</b>");
+
+        builder.append(textWithBold);
+
+        builder.append("</font></div></html>");
+
+        return builder.toString();
+    }
 
 }
