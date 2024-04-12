@@ -20,8 +20,13 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.Locale
 
+private const val AUDIO_SCROBBLER = "https://ws.audioscrobbler.com/2.0/"
+
+private const val LASTFM_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
+
 class OtherInfoWindow : Activity() {
     private var textPane1: TextView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
@@ -32,7 +37,7 @@ class OtherInfoWindow : Activity() {
 
         // create
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://ws.audioscrobbler.com/2.0/")
+            .baseUrl(AUDIO_SCROBBLER)
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
         val lastFMAPI = retrofit.create(LastFMAPI::class.java)
@@ -85,12 +90,10 @@ class OtherInfoWindow : Activity() {
                     e1.printStackTrace()
                 }
             }
-            val imageUrl =
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-            Log.e("TAG", "Get Image from $imageUrl")
+            Log.e("TAG", "Get Image from $LASTFM_IMAGE_URL")
             val finalText = text
             runOnUiThread {
-                Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView1) as ImageView)
+                Picasso.get().load(LASTFM_IMAGE_URL).into(findViewById<View>(R.id.imageView1) as ImageView)
                 textPane1!!.text = Html.fromHtml(finalText)
             }
         }.start()
