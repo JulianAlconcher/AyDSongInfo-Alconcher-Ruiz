@@ -26,7 +26,6 @@ private const val LASTFM_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/com
 
 class OtherInfoWindow : Activity() {
     private var textPane1: TextView? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
@@ -34,13 +33,8 @@ class OtherInfoWindow : Activity() {
         open(intent.getStringExtra("artistName"))
     }
     private fun getArtistInfo(artistName: String?) {
-
         // create
-        val retrofit = Retrofit.Builder()
-            .baseUrl(AUDIO_SCROBBLER)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-        val lastFMAPI = retrofit.create(LastFMAPI::class.java)
+        val lastFMAPI = createRetrofitAPI()
         Log.e("TAG", "artistName $artistName")
         Thread {
             val article = dataBase!!.ArticleDao().getArticleByArtistName(artistName!!)
@@ -48,11 +42,7 @@ class OtherInfoWindow : Activity() {
             if (article != null) { // exists in db
                 text = "[*]" + article.biography
                 val urlString = article.articleUrl
-                findViewById<View>(R.id.openUrlButton1).setOnClickListener {
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.setData(Uri.parse(urlString))
-                    startActivity(intent)
-                }
+                renderView(urlString)
             } else { // get from service
                 val callResponse: Response<String>
                 try {
@@ -80,11 +70,7 @@ class OtherInfoWindow : Activity() {
                         }.start()
                     }
                     val urlString = url.asString
-                    findViewById<View>(R.id.openUrlButton1).setOnClickListener {
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.setData(Uri.parse(urlString))
-                        startActivity(intent)
-                    }
+                    renderView(urlString)
                 } catch (e1: IOException) {
                     Log.e("TAG", "Error $e1")
                     e1.printStackTrace()
@@ -97,6 +83,22 @@ class OtherInfoWindow : Activity() {
                 textPane1!!.text = Html.fromHtml(finalText)
             }
         }.start()
+    }
+
+    private fun createRetrofitAPI():LastFMAPI{
+        val retrofit = Retrofit.Builder()
+            .baseUrl(AUDIO_SCROBBLER)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+        return retrofit.create(LastFMAPI::class.java)
+    }
+
+    private fun renderView(url:String){
+        findViewById<View>(R.id.openUrlButton1).setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setData(Uri.parse(url))
+            startActivity(intent)
+        }
     }
 
     private var dataBase: ArticleDatabase? = null
