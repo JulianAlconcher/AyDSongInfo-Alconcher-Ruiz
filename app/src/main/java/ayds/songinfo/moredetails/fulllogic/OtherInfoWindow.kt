@@ -14,7 +14,6 @@ import ayds.songinfo.R
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
@@ -24,53 +23,39 @@ private const val AUDIO_SCROBBLER = "https://ws.audioscrobbler.com/2.0/"
 
 private const val LASTFM_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 
+private const val URL = "url"
+private const val ARTIST = "artist"
+private const val BIO = "bio"
+private const val CONTENT = "content"
+
 class OtherInfoWindow : Activity() {
     private var textPane1: TextView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         textPane1 = findViewById(R.id.textPane1)
-        open(intent.getStringExtra("artistName"))
+        val artistName = intent.getStringExtra("artistName")
+        if(artistName != null)
+            open(artistName)
     }
-    private fun getArtistInfo(artistName: String?) {
-        // create
+    private fun getArtistInfo(artistName: String) {
         val lastFMAPI = createRetrofitAPI()
         Log.e("TAG", "artistName $artistName")
         Thread {
-            val article = dataBase!!.ArticleDao().getArticleByArtistName(artistName!!)
+            val article = getArticleFromDB(artistName)
             var text = ""
-            if (article != null) { // exists in db
+            if (article != null) {
                 text = "[*]" + article.biography
                 val urlString = article.articleUrl
                 renderView(urlString)
-            } else { // get from service
-                val callResponse: Response<String>
+            } else {
                 try {
-                    callResponse = lastFMAPI.getArtistInfo(artistName).execute()
-                    Log.e("TAG", "JSON " + callResponse.body())
-                    val gson = Gson()
-                    val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
-                    val artist = jobj["artist"].getAsJsonObject()
-                    val bio = artist["bio"].getAsJsonObject()
-                    val extract = bio["content"]
-                    val url = artist["url"]
-                    if (extract == null) {
-                        text = "No Results"
-                    } else {
-                        text = extract.asString.replace("\\n", "\n")
-                        text = textToHtml(text, artistName)
-                        // save to DB  <o/
-                        val text2 = text
-                        Thread {
-                            dataBase!!.ArticleDao().insertArticle(
-                                ArticleEntity(
-                                    artistName, text2, url.asString
-                                )
-                            )
-                        }.start()
-                    }
-                    val urlString = url.asString
-                    renderView(urlString)
+                    val article = getArticleFromAPI(lastFMAPI, artistName)
+                    if(article.biography != null)
+                        saveArticle(article)
+
+                    text = article.biography ?: "No Results"
+                    renderView(article.articleUrl)
                 } catch (e1: IOException) {
                     Log.e("TAG", "Error $e1")
                     e1.printStackTrace()
@@ -78,13 +63,56 @@ class OtherInfoWindow : Activity() {
             }
             Log.e("TAG", "Get Image from $LASTFM_IMAGE_URL")
             val finalText = text
-            runOnUiThread {
-                Picasso.get().load(LASTFM_IMAGE_URL).into(findViewById<View>(R.id.imageView1) as ImageView)
-                textPane1!!.text = Html.fromHtml(finalText)
-            }
+            showText(finalText)
         }.start()
     }
 
+    private fun showText(text: String) {
+        runOnUiThread {
+            Picasso.get().load(LASTFM_IMAGE_URL)
+                .into(findViewById<View>(R.id.imageView1) as ImageView)
+            textPane1!!.text = Html.fromHtml(text)
+        }
+    }
+    private fun saveArticle(article: Article) {
+        if (article.biography != null) {
+            Thread {
+                dataBase!!.ArticleDao().insertArticle(
+                    ArticleEntity(
+                        article.artistName,
+                        article.biography,
+                        article.articleUrl
+                    )
+                )
+            }.start()
+        }
+    }
+    private fun getArticleFromDB(artistName: String?): Article? {
+        val article = dataBase!!.ArticleDao().getArticleByArtistName(artistName!!)
+        return if (article != null) {
+            Article(article.artistName, article.biography, article.articleUrl, true)
+        } else null
+    }
+    private fun getArticleFromAPI(lastFMAPI: LastFMAPI,artistName: String):Article{
+        val callResponse = lastFMAPI.getArtistInfo(artistName).execute()
+        Log.e("TAG", "JSON " + callResponse.body())
+        val gson = Gson()
+        val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
+        val artist = jobj[ARTIST].getAsJsonObject()
+        val bio = artist[BIO].getAsJsonObject()
+        val extract = bio[CONTENT]
+        val url = artist[URL]
+        var text: String?
+        if (extract == null) {
+            text = "No Results"
+        } else {
+            text = extract.asString.replace("\\n", "\n")
+            text = textToHtml(text, artistName)
+            val text2 = text
+        }
+        val urlString = url.asString
+        return Article(artistName, text, urlString,false)
+    }
     private fun createRetrofitAPI():LastFMAPI{
         val retrofit = Retrofit.Builder()
             .baseUrl(AUDIO_SCROBBLER)
@@ -102,7 +130,7 @@ class OtherInfoWindow : Activity() {
     }
 
     private var dataBase: ArticleDatabase? = null
-    private fun open(artist: String?) {
+    private fun open(artist: String) {
         dataBase =
             databaseBuilder(this, ArticleDatabase::class.java, "database-name-thename").build()
         Thread {
@@ -131,4 +159,15 @@ class OtherInfoWindow : Activity() {
             return builder.toString()
         }
     }
+
+    internal data class Article(
+        val artistName: String,
+        val biography: String?,
+        val articleUrl: String,
+        val isLocallyStored: Boolean
+    ) {
+
+    }
+
+
 }
