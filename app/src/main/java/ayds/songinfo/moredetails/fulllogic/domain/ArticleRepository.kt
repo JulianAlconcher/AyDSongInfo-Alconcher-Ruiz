@@ -1,4 +1,7 @@
-package ayds.songinfo.moredetails.fulllogic.domain
+package ayds.songinfo.moredetails.domain
 
-class ArticleRepository {
+import ayds.songinfo.moredetails.fulllogic.domain.Article
+
+interface ArticleRepository {
+    fun getArticle(artistName: String): Article?
 }

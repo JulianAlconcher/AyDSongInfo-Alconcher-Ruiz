@@ -1,4 +1,8 @@
 package ayds.songinfo.moredetails.fulllogic.domain
 
-class Article {
-}
+data class Article(
+    val artistName: String,
+    val biography: String?,
+    val articleUrl: String,
+    val isLocallyStored: Boolean
+)
