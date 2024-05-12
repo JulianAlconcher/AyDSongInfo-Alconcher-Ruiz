@@ -1,4 +1,4 @@
-package ayds.songinfo.moredetails.data.local.lastfm
+package ayds.songinfo.moredetails.data.local
 
 import androidx.room.Dao
 import androidx.room.Database
@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
 
-@Database(entities = [ArticleEntity::class], version = 2)
+@Database(entities = [ArticleEntity::class], version = 1)
 abstract class ArticleDatabase : RoomDatabase() {
     abstract fun ArticleDao(): ArticleDao
 }
