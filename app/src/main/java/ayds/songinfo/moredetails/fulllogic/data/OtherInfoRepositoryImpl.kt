@@ -1,6 +1,6 @@
 package ayds.songinfo.moredetails.fulllogic.data
 
-import ayds.songinfo.moredetails.data.external.OtherInfoService
+import ayds.songinfo.moredetails.fulllogic.data.external.OtherInfoService
 import ayds.songinfo.moredetails.fulllogic.data.local.OtherInfoLocalStorage
 import ayds.songinfo.moredetails.fulllogic.domain.ArtistBiography
 import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository

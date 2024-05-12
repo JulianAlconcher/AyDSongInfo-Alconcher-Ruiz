@@ -3,7 +3,7 @@ package ayds.songinfo.moredetails.fulllogic.dependencyInjector
 import android.content.Context
 import androidx.room.Room
 import ayds.songinfo.moredetails.fulllogic.data.OtherInfoRepositoryImpl
-import ayds.songinfo.moredetails.data.external.OtherInfoServiceImpl
+import ayds.songinfo.moredetails.fulllogic.data.external.OtherInfoServiceImpl
 import ayds.songinfo.moredetails.data.local.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.data.external.LastFMAPI
 import ayds.songinfo.moredetails.fulllogic.data.external.LastFMToArtistBiographyResolverImpl
