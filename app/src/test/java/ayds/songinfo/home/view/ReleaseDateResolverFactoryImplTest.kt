@@ -7,38 +7,38 @@ import org.junit.Test
 
 class ReleaseDateResolverFactoryImplTest {
 
-    private val releaseDateResolverFactory: ReleaseDateResolverFactory =
-        ReleaseDateResolverFactoryImpl()
+    private val releaseDateResolverFactory: DatePrecisionFormatterFactory =
+        DatePrecisionFormatterFactoryImpl()
 
     @Test
     fun `on day precision should return day precision resolver`() {
-        val releaseDateResolverFactory: ReleaseDateResolverFactory =
-            ReleaseDateResolverFactoryImpl()
+        val releaseDateResolverFactory: DatePrecisionFormatterFactory =
+            DatePrecisionFormatterFactoryImpl()
 
-        val result = releaseDateResolverFactory.getReleaseDateResolver(mockk {
+        val result = releaseDateResolverFactory.getDatePrecisionFormatter(mockk {
             every { releaseDatePrecision } returns "day"
         })
 
 
-        assertEquals(result::class.java, ReleaseDateDayResolver::class.java)
+        assertEquals(result::class.java, DatePrecisionDayFormatter::class.java)
     }
 
     @Test
     fun `on month precision should return month precision resolver`() {
-        val result = releaseDateResolverFactory.getReleaseDateResolver(mockk {
+        val result = releaseDateResolverFactory.getDatePrecisionFormatter(mockk {
             every { releaseDatePrecision } returns "month"
         })
 
-        assertEquals(result::class.java, ReleaseDateMonthResolver::class.java)
+        assertEquals(result::class.java, DatePrecisionMonthFormatter::class.java)
     }
 
     @Test
     fun `on year precision should return year precision resolver`() {
-        val result = releaseDateResolverFactory.getReleaseDateResolver(mockk {
+        val result = releaseDateResolverFactory.getDatePrecisionFormatter(mockk {
             every { releaseDatePrecision } returns "year"
         })
 
-        assertEquals(result::class.java, ReleaseDateYearResolver::class.java)
+        assertEquals(result::class.java, DatePrecisionYearFormatter::class.java)
     }
 
 }

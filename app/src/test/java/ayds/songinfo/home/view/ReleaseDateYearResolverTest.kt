@@ -9,7 +9,7 @@ import org.junit.Test
 class ReleaseDateYearResolverTest {
 
     private val song: Song.SpotifySong = mockk()
-    private val releaseDateYearResolver: ReleaseDateYearResolver = ReleaseDateYearResolver(song)
+    private val releaseDateYearResolver: DatePrecisionYearFormatter = DatePrecisionYearFormatter(song)
 
     @Test
     fun `on get release date should return not leap year`() {

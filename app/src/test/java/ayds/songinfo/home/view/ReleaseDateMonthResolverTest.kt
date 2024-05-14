@@ -9,7 +9,7 @@ import org.junit.Test
 class ReleaseDateMonthResolverTest {
 
     private val song: Song.SpotifySong = mockk()
-    private val releaseDateMonthResolver: ReleaseDateMonthResolver = ReleaseDateMonthResolver(song)
+    private val releaseDateMonthResolver: DatePrecisionMonthFormatter = DatePrecisionMonthFormatter(song)
 
     @Test
     fun `on get release date should return month 1`() {
