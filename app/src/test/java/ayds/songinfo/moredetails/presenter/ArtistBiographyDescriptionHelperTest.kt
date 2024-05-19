@@ -9,7 +9,7 @@ class ArtistBiographyDescriptionHelperTest {
     private val artistBiographyDescriptionHelper = ArtistBiographyDescriptionHelperImpl();
 
     @Test
-    fun `given a local artist biography it should return adequate HTML`() {
+    fun `given a local artist biography it should return HTML`() {
         val artistBiography = ArtistBiography(
             "NAFTA",
             "NAFTA es una banda particular desde todo punto de\\n" +
@@ -54,7 +54,7 @@ class ArtistBiographyDescriptionHelperTest {
     }
 
     @Test
-    fun `given a non-local artist biography it should return adequate HTML`() {
+    fun `given a non-local artist biography it should return HTML`() {
         val artistBiography = ArtistBiography(
             "NAFTA",
             "NAFTA es una banda particular desde todo punto de\\n" +
