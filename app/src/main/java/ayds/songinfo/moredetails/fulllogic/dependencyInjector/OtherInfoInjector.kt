@@ -24,9 +24,10 @@ object OtherInfoInjector {
 
     fun initGraph(context: Context) {
 
-        val articleDatabase =
-            Room.databaseBuilder(context, ArticleDatabase::class.java, ARTICLE_BD_NAME).build()
+        //Crea instancia de la db
+        val articleDatabase = Room.databaseBuilder(context, ArticleDatabase::class.java, ARTICLE_BD_NAME).build()
 
+        //Crea una instancia de retofit para realizar llamadas a la API de LastFM
         val retrofit = Retrofit.Builder()
             .baseUrl(LASTFM_BASE_URL)
             .addConverterFactory(ScalarsConverterFactory.create())

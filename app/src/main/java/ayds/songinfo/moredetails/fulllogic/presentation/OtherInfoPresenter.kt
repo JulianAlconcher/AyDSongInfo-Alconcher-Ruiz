@@ -8,7 +8,6 @@ import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository
 interface OtherInfoPresenter {
     val artistBiographyObservable: Observable<ArtistBiographyUiState>
     fun getArtistInfo(artistName: String)
-
 }
 
 internal class OtherInfoPresenterImpl(
