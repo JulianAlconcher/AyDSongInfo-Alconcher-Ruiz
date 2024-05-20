@@ -14,8 +14,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class OtherInfoRepositoryTest {
-    private val otherInfoLocalStorage: OtherInfoLocalStorage = mockk(relaxUnitFun = true)
-    private val otherInfoService: OtherInfoService = mockk(relaxUnitFun = true)
+    private val otherInfoLocalStorage: OtherInfoLocalStorage = mockk()
+    private val otherInfoService: OtherInfoService = mockk()
 
     private val otherInfoRepository: OtherInfoRepository =
         OtherInfoRepositoryImpl(otherInfoLocalStorage,otherInfoService)
@@ -47,7 +47,7 @@ class OtherInfoRepositoryTest {
     @Test
     fun `given non existing article in DB, should return artist bio and mark it as local without bio`() {
         val artistBiography =
-            ArtistBiography("artistName", "content", "url", false)
+            ArtistBiography("artistName", "", "url", false)
         every { otherInfoLocalStorage.getArticle("artistName") } returns null
         every { otherInfoService.getArticle("artistName") } returns artistBiography
 
@@ -55,6 +55,6 @@ class OtherInfoRepositoryTest {
 
         assertEquals(artistBiography,result)
         assertFalse(artistBiography.isLocallyStored)
-        verify { otherInfoLocalStorage.insertArtist(artistBiography) }
+        verify(inverse = true) { otherInfoLocalStorage.insertArtist(artistBiography) }
     }
 }
