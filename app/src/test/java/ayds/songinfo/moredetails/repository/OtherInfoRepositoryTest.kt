@@ -29,7 +29,7 @@ class OtherInfoRepositoryTest {
         val result = otherInfoRepository.getArtistInfo("artistName")
 
         assertEquals(artistBiography,result)
-        assertTrue(artistBiography.isLocallyStored)
+        assertTrue(result.isLocallyStored)
     }
     @Test
     fun `given non existing article in DB, should return artist bio and mark it as local with bio`() {
@@ -41,7 +41,7 @@ class OtherInfoRepositoryTest {
         val result = otherInfoRepository.getArtistInfo("artistName")
 
         assertEquals(artistBiography,result)
-        assertFalse(artistBiography.isLocallyStored)
+        assertFalse(result.isLocallyStored)
         verify { otherInfoLocalStorage.insertArtist(artistBiography) }
     }
     @Test
@@ -54,7 +54,7 @@ class OtherInfoRepositoryTest {
         val result = otherInfoRepository.getArtistInfo("artistName")
 
         assertEquals(artistBiography,result)
-        assertFalse(artistBiography.isLocallyStored)
+        assertFalse(result.isLocallyStored)
         verify(inverse = true) { otherInfoLocalStorage.insertArtist(artistBiography) }
     }
 }
