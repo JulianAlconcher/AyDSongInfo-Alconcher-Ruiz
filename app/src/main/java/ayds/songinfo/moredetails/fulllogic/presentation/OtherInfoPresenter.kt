@@ -2,7 +2,7 @@ package ayds.songinfo.moredetails.fulllogic.presentation
 
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.songinfo.moredetails.fulllogic.domain.ArtistBiography
+import ayds.artist.external.lastFM.data.ArtistBiography
 import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository
 
 interface OtherInfoPresenter {

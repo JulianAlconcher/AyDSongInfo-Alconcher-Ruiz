@@ -1,15 +1,14 @@
-package ayds.songinfo.moredetails.fulllogic.data.external
+package ayds.artist.external.lastFM.data
 
-import ayds.songinfo.moredetails.fulllogic.domain.ArtistBiography
 import java.io.IOException
 
-interface OtherInfoService {
+interface LastfmArticleService {
     fun getArticle(artistName: String): ArtistBiography
 }
-internal class OtherInfoServiceImpl(
+class LastfmArticleServiceImpl(
     private val lastFMAPI: LastFMAPI,
     private val lastFMToArtistBiographyResolver: LastFMToArtistBiographyResolver
-) : OtherInfoService {
+) : LastfmArticleService {
 
     override fun getArticle(artistName: String): ArtistBiography {
 

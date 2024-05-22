@@ -2,7 +2,7 @@ package ayds.songinfo.moredetails.fulllogic.data.local
 
 import ayds.songinfo.moredetails.data.local.ArticleDatabase
 import ayds.songinfo.moredetails.data.local.ArticleEntity
-import ayds.songinfo.moredetails.fulllogic.domain.ArtistBiography
+import ayds.artist.external.lastFM.data.ArtistBiography
 
 interface OtherInfoLocalStorage {
     fun getArticle(artistName: String): ArtistBiography?

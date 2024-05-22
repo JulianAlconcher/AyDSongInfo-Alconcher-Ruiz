@@ -1,6 +1,6 @@
 package ayds.songinfo.moredetails.presenter
 
-import ayds.songinfo.moredetails.fulllogic.domain.ArtistBiography
+import ayds.artist.external.lastFM.data.ArtistBiography
 import ayds.songinfo.moredetails.fulllogic.presentation.ArtistBiographyDescriptionHelper
 import ayds.songinfo.moredetails.fulllogic.presentation.ArtistBiographyDescriptionHelperImpl
 import org.junit.Assert

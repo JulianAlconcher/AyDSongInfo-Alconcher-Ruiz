@@ -1,4 +1,4 @@
-package ayds.songinfo.moredetails.fulllogic.data.external
+package ayds.artist.external.lastFM.data
 
 import retrofit2.Call
 import retrofit2.http.GET

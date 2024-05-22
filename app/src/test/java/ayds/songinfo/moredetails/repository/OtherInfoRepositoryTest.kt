@@ -1,9 +1,9 @@
 package ayds.songinfo.moredetails.repository
 
 import ayds.songinfo.moredetails.fulllogic.data.OtherInfoRepositoryImpl
-import ayds.songinfo.moredetails.fulllogic.data.external.OtherInfoService
+import ayds.artist.external.lastFM.data.OtherInfoService
 import ayds.songinfo.moredetails.fulllogic.data.local.OtherInfoLocalStorage
-import ayds.songinfo.moredetails.fulllogic.domain.ArtistBiography
+import ayds.artist.external.lastFM.data.ArtistBiography
 import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository
 import io.mockk.every
 import io.mockk.mockk

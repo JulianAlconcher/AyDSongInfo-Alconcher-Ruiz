@@ -1,13 +1,14 @@
 package ayds.songinfo.moredetails.fulllogic.data
 
-import ayds.songinfo.moredetails.fulllogic.data.external.OtherInfoService
+import ayds.artist.external.lastFM.data.ArtistBiography
+import ayds.artist.external.lastFM.data.LastfmArticleService
+import ayds.artist.external.lastFM.injector.lastFMInjector
 import ayds.songinfo.moredetails.fulllogic.data.local.OtherInfoLocalStorage
-import ayds.songinfo.moredetails.fulllogic.domain.ArtistBiography
 import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository
 
 internal class OtherInfoRepositoryImpl(
     private val otherInfoLocalStorage: OtherInfoLocalStorage,
-    private val otherInfoService: OtherInfoService,
+    private val otherInfoService: LastfmArticleService
 ) : OtherInfoRepository {
 
     override fun getArtistInfo(artistName: String): ArtistBiography {
