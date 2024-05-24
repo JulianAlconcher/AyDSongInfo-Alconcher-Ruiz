@@ -2,7 +2,6 @@ package ayds.songinfo.moredetails.fulllogic.data
 
 import ayds.artist.external.lastFM.data.ArtistBiography
 import ayds.artist.external.lastFM.data.LastfmArticleService
-import ayds.artist.external.lastFM.injector.lastFMInjector
 import ayds.songinfo.moredetails.fulllogic.data.local.OtherInfoLocalStorage
 import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository
 

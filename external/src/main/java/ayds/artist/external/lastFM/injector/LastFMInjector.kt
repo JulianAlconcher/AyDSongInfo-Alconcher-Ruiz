@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
-object lastFMInjector {
+object LastFMInjector {
     private val lastFMToArtistBiographyResolver: LastFMToArtistBiographyResolver = LastFMToArtistBiographyResolverImpl()
     private val lastFMAPI = getLastFMAPI()
 

@@ -2,7 +2,7 @@ package ayds.songinfo.moredetails.fulllogic.dependencyInjector
 
 import android.content.Context
 import androidx.room.Room
-import ayds.artist.external.lastFM.injector.lastFMInjector
+import ayds.artist.external.lastFM.injector.LastFMInjector
 import ayds.songinfo.moredetails.fulllogic.data.OtherInfoRepositoryImpl
 import ayds.songinfo.moredetails.data.local.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.data.local.OtherInfoLocalStorageImpl
@@ -23,7 +23,7 @@ object OtherInfoInjector {
 
         val articleLocalStorage = OtherInfoLocalStorageImpl(articleDatabase)
 
-        val otherInfoService = lastFMInjector.lastFMService
+        val otherInfoService = LastFMInjector.lastFMService
 
         val repository = OtherInfoRepositoryImpl(articleLocalStorage, otherInfoService)
 
