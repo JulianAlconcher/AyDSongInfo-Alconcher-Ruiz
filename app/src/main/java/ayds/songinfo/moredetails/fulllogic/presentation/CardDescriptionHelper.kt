@@ -1,6 +1,6 @@
 package ayds.songinfo.moredetails.fulllogic.presentation
 
-import ayds.songinfo.moredetails.domain.Card
+import ayds.songinfo.moredetails.fulllogic.domain.Card
 import java.util.Locale
 
 interface CardDescriptionHelper {

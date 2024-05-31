@@ -4,8 +4,8 @@ package ayds.songinfo.moredetails.fulllogic.data
 import ayds.artist.external.lastFM.LastFmBiography
 import ayds.artist.external.lastFM.LastFmService
 import ayds.songinfo.moredetails.fulllogic.data.local.OtherInfoLocalStorage
-import ayds.songinfo.moredetails.domain.Card
-import ayds.songinfo.moredetails.domain.CardSource
+import ayds.songinfo.moredetails.fulllogic.domain.Card
+import ayds.songinfo.moredetails.fulllogic.domain.CardSource
 import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository
 
 internal class OtherInfoRepositoryImpl(

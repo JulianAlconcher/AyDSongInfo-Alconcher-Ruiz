@@ -1,9 +1,7 @@
 package ayds.songinfo.moredetails.fulllogic.data.local
 
-import ayds.songinfo.moredetails.data.local.CardDatabase
-import ayds.songinfo.moredetails.data.local.CardEntity
-import ayds.songinfo.moredetails.domain.Card
-import ayds.songinfo.moredetails.domain.CardSource
+import ayds.songinfo.moredetails.fulllogic.domain.Card
+import ayds.songinfo.moredetails.fulllogic.domain.CardSource
 
 interface OtherInfoLocalStorage {
     fun getCard(artistName: String): Card?

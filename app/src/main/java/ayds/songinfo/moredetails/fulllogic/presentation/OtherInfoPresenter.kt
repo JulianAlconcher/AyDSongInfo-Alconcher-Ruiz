@@ -2,7 +2,7 @@ package ayds.songinfo.moredetails.fulllogic.presentation
 
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.songinfo.moredetails.domain.Card
+import ayds.songinfo.moredetails.fulllogic.domain.Card
 import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository
 import ayds.songinfo.moredetails.presentation.CardUiState
 

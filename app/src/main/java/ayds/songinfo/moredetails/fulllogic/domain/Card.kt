@@ -1,4 +1,4 @@
-package ayds.songinfo.moredetails.domain
+package ayds.songinfo.moredetails.fulllogic.domain
 
 data class Card(
     val artistName: String,

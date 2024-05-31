@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import ayds.artist.external.lastFM.LastFmInjector
 import ayds.songinfo.moredetails.fulllogic.data.OtherInfoRepositoryImpl
-import ayds.songinfo.moredetails.data.local.CardDatabase
+import ayds.songinfo.moredetails.fulllogic.data.local.CardDatabase
 import ayds.songinfo.moredetails.fulllogic.data.local.OtherInfoLocalStorageImpl
 import ayds.songinfo.moredetails.fulllogic.presentation.CardDescriptionHelperImpl
 import ayds.songinfo.moredetails.fulllogic.presentation.OtherInfoPresenter
