@@ -1,7 +1,8 @@
 package ayds.songinfo.moredetails.fulllogic.domain
 
-import ayds.artist.external.lastFM.data.ArtistBiography
+import ayds.songinfo.moredetails.domain.Card
+
 
 interface OtherInfoRepository {
-    fun getArtistInfo(artistName: String): ArtistBiography
+    fun getCard(artistName: String): Card
 }

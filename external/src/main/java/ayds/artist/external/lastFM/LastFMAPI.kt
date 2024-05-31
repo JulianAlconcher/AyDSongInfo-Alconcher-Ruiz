@@ -1,4 +1,4 @@
-package ayds.artist.external.lastFM.data
+package ayds.artist.external.lastFM
 
 import retrofit2.Call
 import retrofit2.http.GET

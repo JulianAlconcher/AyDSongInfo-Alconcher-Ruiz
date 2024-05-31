@@ -1,32 +1,38 @@
 package ayds.songinfo.moredetails.fulllogic.data
 
-import ayds.artist.external.lastFM.data.ArtistBiography
-import ayds.artist.external.lastFM.data.LastfmArticleService
+
+import ayds.artist.external.lastFM.LastFmBiography
+import ayds.artist.external.lastFM.LastFmService
 import ayds.songinfo.moredetails.fulllogic.data.local.OtherInfoLocalStorage
+import ayds.songinfo.moredetails.domain.Card
+import ayds.songinfo.moredetails.domain.CardSource
 import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository
 
 internal class OtherInfoRepositoryImpl(
     private val otherInfoLocalStorage: OtherInfoLocalStorage,
-    private val otherInfoService: LastfmArticleService
+    private val lastFmService: LastFmService,
 ) : OtherInfoRepository {
 
-    override fun getArtistInfo(artistName: String): ArtistBiography {
-        val dbArticle = otherInfoLocalStorage.getArticle(artistName)
+    override fun getCard(artistName: String): Card {
+        val dbCard = otherInfoLocalStorage.getCard(artistName)
 
-        val artistBiography: ArtistBiography
+        val card: Card
 
-        if (dbArticle != null) {
-            artistBiography = dbArticle.apply { markItAsLocal() }
+        if (dbCard != null) {
+            card = dbCard.apply { markItAsLocal() }
         } else {
-            artistBiography = otherInfoService.getArticle(artistName)
-            if (artistBiography.biography.isNotEmpty()) {
-                otherInfoLocalStorage.insertArtist(artistBiography)
+            card = lastFmService.getArticle(artistName).toCard()
+            if (card.text.isNotEmpty()) {
+                otherInfoLocalStorage.insertCard(card)
             }
         }
-        return artistBiography
+        return card
     }
 
-    private fun ArtistBiography.markItAsLocal() {
+    private fun Card.markItAsLocal() {
         isLocallyStored = true
     }
 }
+
+private fun LastFmBiography.toCard() =
+    Card(artistName, biography, articleUrl, CardSource.LAST_FM)

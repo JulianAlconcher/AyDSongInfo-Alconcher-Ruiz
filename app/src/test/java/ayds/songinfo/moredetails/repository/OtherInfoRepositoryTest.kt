@@ -3,7 +3,7 @@ package ayds.songinfo.moredetails.repository
 import ayds.songinfo.moredetails.fulllogic.data.OtherInfoRepositoryImpl
 import ayds.artist.external.lastFM.data.OtherInfoService
 import ayds.songinfo.moredetails.fulllogic.data.local.OtherInfoLocalStorage
-import ayds.artist.external.lastFM.data.ArtistBiography
+import ayds.artist.external.lastFM.LastFmBiography
 import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -22,39 +22,39 @@ class OtherInfoRepositoryTest {
 
     @Test
     fun `given existing article should return artist bio and mark it as local`() {
-        val artistBiography =
-            ArtistBiography("artistName", "content", "url", false)
-        every { otherInfoLocalStorage.getArticle("artistName") } returns artistBiography
+        val lastFmBiography =
+            LastFmBiography("artistName", "content", "url", false)
+        every { otherInfoLocalStorage.getArticle("artistName") } returns lastFmBiography
 
         val result = otherInfoRepository.getArtistInfo("artistName")
 
-        assertEquals(artistBiography,result)
+        assertEquals(lastFmBiography,result)
         assertTrue(result.isLocallyStored)
     }
     @Test
     fun `given non existing article in DB, should return artist bio and mark it as local with bio`() {
-        val artistBiography =
-            ArtistBiography("artistName", "content", "url", false)
+        val lastFmBiography =
+            LastFmBiography("artistName", "content", "url", false)
         every { otherInfoLocalStorage.getArticle("artistName") } returns null
-        every { otherInfoService.getArticle("artistName") } returns artistBiography
+        every { otherInfoService.getArticle("artistName") } returns lastFmBiography
 
         val result = otherInfoRepository.getArtistInfo("artistName")
 
-        assertEquals(artistBiography,result)
+        assertEquals(lastFmBiography,result)
         assertFalse(result.isLocallyStored)
-        verify { otherInfoLocalStorage.insertArtist(artistBiography) }
+        verify { otherInfoLocalStorage.insertArtist(lastFmBiography) }
     }
     @Test
     fun `given non existing article in DB, should return artist bio and mark it as local without bio`() {
-        val artistBiography =
-            ArtistBiography("artistName", "", "url", false)
+        val lastFmBiography =
+            LastFmBiography("artistName", "", "url", false)
         every { otherInfoLocalStorage.getArticle("artistName") } returns null
-        every { otherInfoService.getArticle("artistName") } returns artistBiography
+        every { otherInfoService.getArticle("artistName") } returns lastFmBiography
 
         val result = otherInfoRepository.getArtistInfo("artistName")
 
-        assertEquals(artistBiography,result)
+        assertEquals(lastFmBiography,result)
         assertFalse(result.isLocallyStored)
-        verify(inverse = true) { otherInfoLocalStorage.insertArtist(artistBiography) }
+        verify(inverse = true) { otherInfoLocalStorage.insertArtist(lastFmBiography) }
     }
 }

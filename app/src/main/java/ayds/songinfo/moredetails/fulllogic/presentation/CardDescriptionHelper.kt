@@ -1,25 +1,27 @@
 package ayds.songinfo.moredetails.fulllogic.presentation
 
-import ayds.artist.external.lastFM.data.ArtistBiography
+import ayds.songinfo.moredetails.domain.Card
 import java.util.Locale
 
-interface ArtistBiographyDescriptionHelper {
-    fun getDescription(artistBiography: ArtistBiography): String
+interface CardDescriptionHelper {
+    fun getDescription(card: Card): String
 }
 
 private const val HEADER = "<html><div width=400><font face=\"arial\">"
 private const val FOOTER = "</font></div></html>"
 
-internal class ArtistBiographyDescriptionHelperImpl : ArtistBiographyDescriptionHelper {
+private const val LOCAL_MARKER = "[*]"
 
-    override fun getDescription(artistBiography: ArtistBiography): String {
-        val text = getTextBiography(artistBiography)
-        return textToHtml(text, artistBiography.artistName)
+internal class CardDescriptionHelperImpl : CardDescriptionHelper {
+
+    override fun getDescription(card: Card): String {
+        val text = getText(card)
+        return textToHtml(text, card.artistName)
     }
 
-    private fun getTextBiography(artistBiography: ArtistBiography): String {
-        val prefix = if (artistBiography.isLocallyStored) "[*]" else ""
-        val text = artistBiography.biography.replace("\\n", "\n")
+    private fun getText(card: Card): String {
+        val prefix = if (card.isLocallyStored) LOCAL_MARKER else ""
+        val text = card.text
         return "$prefix$text"
     }
 
@@ -28,6 +30,7 @@ internal class ArtistBiographyDescriptionHelperImpl : ArtistBiographyDescription
         builder.append(HEADER)
         val textWithBold = text
             .replace("'", " ")
+            .replace("\\n", "\n")
             .replace("\n", "<br>")
             .replace(
                 "(?i)$term".toRegex(),
