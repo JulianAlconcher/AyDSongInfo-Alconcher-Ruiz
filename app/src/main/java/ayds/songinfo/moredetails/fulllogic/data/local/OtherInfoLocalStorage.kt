@@ -1,7 +1,6 @@
 package ayds.songinfo.moredetails.fulllogic.data.local
 
 import ayds.songinfo.moredetails.fulllogic.domain.Card
-import ayds.songinfo.moredetails.fulllogic.domain.CardSource
 
 interface OtherInfoLocalStorage {
     fun getCards(artistName: String): List<Card>
@@ -9,35 +8,29 @@ interface OtherInfoLocalStorage {
 }
 
 internal class OtherInfoLocalStorageImpl(
-    private val dataBase: ArticleDatabase
+    private val cardDatabase: CardDatabase,
 ) : OtherInfoLocalStorage {
 
     override fun getCards(artistName: String): List<Card> {
-        val dbCards = dataBase.ArticleDao().getCardsByArtistName(artistName)
-        val cards = mapToDomainCards(dbCards)
-        return cards
+        val dbCards = cardDatabase.CardDao().getCardByArtistName(artistName)
+        val sourceLogoUrl = ""
+        return dbCards.map { Card(it.artistName, it.text, it.url, it.source, sourceLogoUrl, true) }
     }
-
-    private fun mapToDomainCards(dbCards: List<CardEntity>) =
-        dbCards.map { Card(it.artistName, it.description, it.infoUrl, it.source, it.sourceLogoUrl, true) }
-
     override fun saveCards(cards: List<Card>) {
         cards.forEach{
             saveCard(it)
         }
     }
-
-    private fun saveCard(card: Card) {
-        if (card.description != null) {
-            dataBase.ArticleDao().insertArticle(
-                CardEntity(
-                    card.artistName,
-                    card.description,
-                    card.infoUrl,
-                    card.source,
-                    card.sourceLogoUrl
-                )
+    private fun saveCard(card: Card){
+        val sourceLogoUrl = ""
+        cardDatabase.CardDao().insertCard(
+            CardEntity(
+                card.artistName,
+                card.text,
+                card.url,
+                card.source,
+                sourceLogoUrl
             )
-        }
+        )
     }
 }

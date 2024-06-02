@@ -14,17 +14,18 @@ internal class CardBrokerImpl(
     private val wikipedia: WikipediaToBiographyProxy,
     private val nyTimes: NewYorkTimesToBiographyProxy
 ): CardBroker {
+
     override fun getCards(artistName: String): List<Card> {
         val cards = mutableListOf<Card>()
 
         val lastfmCard = getLastfmCard(artistName)
-        addIfNotNull(cards, lastfmCard)
+        if(lastfmCard != null) cards.add(lastfmCard)
 
         val wikipediaCard = getWikipediaCard(artistName)
-        addIfNotNull(cards, wikipediaCard)
+        if(wikipediaCard != null) cards.add(wikipediaCard)
 
         val nyTimes = getNYTimesCard(artistName)
-        addIfNotNull(cards, nyTimes)
+        if(nyTimes != null)  cards.add(nyTimes)
 
         return cards
     }
@@ -40,9 +41,5 @@ internal class CardBrokerImpl(
 
     private fun getNYTimesCard(artistName: String): Card?{
         return nyTimes.getCard(artistName)
-    }
-
-    private fun addIfNotNull(list:MutableList<Card>, card: Card?){
-        card?.let { list.add(it) }
     }
 }

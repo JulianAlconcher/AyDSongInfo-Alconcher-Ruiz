@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
+import ayds.songinfo.moredetails.fulllogic.domain.CardSource
 
 @Database(entities = [CardEntity::class], version = 1)
 abstract class CardDatabase : RoomDatabase() {
@@ -18,9 +19,11 @@ abstract class CardDatabase : RoomDatabase() {
 data class CardEntity(
     @PrimaryKey
     val artistName: String,
-    val content: String,
+    val text: String,
     val url: String,
-    val source: Int
+    val source: CardSource,
+    val sourceLogoURL : String,
+    var isLocallyStored: Boolean = false
 )
 
 @Dao
@@ -30,6 +33,6 @@ interface CardDao {
     fun insertCard(article: CardEntity)
 
     @Query("SELECT * FROM CardEntity WHERE artistName LIKE :artistName LIMIT 1")
-    fun getCardByArtistName(artistName: String): CardEntity?
+    fun getCardByArtistName(artistName: String): List<CardEntity>
 
 }
